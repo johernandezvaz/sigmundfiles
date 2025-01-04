@@ -1,0 +1,45 @@
+<!-- Sección de notas manuscritas -->
+<div class="detail-section">
+    <h2 class="section-title">
+        Notas Manuscritas
+        <a href="{% url 'patient_notes' patient.pk %}" class="btn btn-primary btn-sm">
+            Ver Todas
+        </a>
+    </h2>
+
+    {% if patient.handwritten_notes.exists %}
+    <div class="notes-preview">
+        {% for note in patient.handwritten_notes.all|slice:":3" %}
+        <div class="note-card">
+            <div class="note-image">
+                <img src="{{ note.image.url }}" alt="Nota manuscrita">
+            </div>
+            <div class="note-content">
+                <div class="note-text">{{ note.corrected_text|truncatewords:50 }}</div>
+                <div class="note-meta">
+                    <span>{{ note.created_at|date:"d/m/Y" }}</span>
+                    <a href="{% url 'note_edit' note.id %}" class="btn btn-outline btn-sm">
+                        Editar
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        
+        {% if patient.handwritten_notes.count > 3 %}
+        <div class="notes-more">
+            <a href="{% url 'patient_notes' patient.pk %}" class="btn btn-outline">
+                Ver todas las notas ({{ patient.handwritten_notes.count }})
+            </a>
+        </div>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>No hay notas registradas</p>
+        <a href="{% url 'note_create' patient.pk %}" class="btn btn-primary">
+            Agregar Primera Nota
+        </a>
+    </div>
+    {% endif %}
+</div>

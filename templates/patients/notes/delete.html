@@ -1,0 +1,39 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+{% block title %}Eliminar Nota - SigmundFiles{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/patients/notes.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="delete-confirmation-container">
+    <div class="delete-confirmation-content">
+        <h1 class="delete-title">Confirmar Eliminación</h1>
+        <p class="delete-message">¿Estás seguro de que deseas eliminar esta nota? Esta acción no se puede deshacer.</p>
+        
+        <div class="note-preview">
+            <div class="note-image">
+                <img src="{{ object.image.url }}" alt="Nota a eliminar">
+            </div>
+            <div class="note-details">
+                <p class="note-date">Creada el {{ object.created_at|date:"d/m/Y H:i" }}</p>
+                <p class="note-text">{{ object.corrected_text|truncatewords:50 }}</p>
+            </div>
+        </div>
+
+        <form method="post" class="delete-form">
+            {% csrf_token %}
+            <div class="form-actions">
+                <a href="{% url 'patient_notes' object.patient.id %}" class="btn btn-outline">
+                    Cancelar
+                </a>
+                <button type="submit" class="btn btn-danger">
+                    Eliminar Nota
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

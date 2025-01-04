@@ -1,0 +1,49 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+{% block title %}Editar Nota - SigmundFiles{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/patients/notes.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="note-edit-container">
+    <div class="note-edit-header">
+        <h1 class="note-edit-title">Editar Nota</h1>
+        <p class="note-edit-subtitle">Paciente: {{ object.patient.get_full_name }}</p>
+    </div>
+
+    <div class="note-edit-content">
+        <div class="original-image">
+            <h2>Imagen Original</h2>
+            <img src="{{ object.image.url }}" alt="Nota original" class="note-image">
+            <div class="image-meta">
+                <span>Creada: {{ object.created_at|date:"d/m/Y H:i" }}</span>
+            </div>
+        </div>
+        
+        <div class="text-editor">
+            <h2>Texto Digitalizado</h2>
+            <form method="POST" class="edit-form">
+                {% csrf_token %}
+                {{ form.corrected_text }}
+                {% if form.corrected_text.errors %}
+                <div class="form-error">
+                    {{ form.corrected_text.errors }}
+                </div>
+                {% endif %}
+                
+                <div class="form-actions">
+                    <a href="{% url 'patient_notes' object.patient.id %}" class="btn btn-outline">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

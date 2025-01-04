@@ -6,6 +6,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/patients/detail.css' %}">
+<link rel="stylesheet" href="{% static 'css/patients/notes.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -16,6 +17,7 @@
         {% include "patients/includes/detail_personal_info.html" %}
         {% include "patients/includes/detail_medical_history.html" %}
         {% include "patients/includes/detail_family_info.html" %}
+        {% include "patients/includes/detail_notes.html" %}
     </div>
 </div>
 {% endblock %}

@@ -1,0 +1,156 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+{% block title %}Nueva Nota - {{ patient.get_full_name }} - SigmundFiles{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block content %}
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+        <div class="psi-symbol">
+            <div class="psi-glow"></div>
+        </div>
+        <h3 class="loading-title">Procesando imagen</h3>
+        <p class="loading-message">Este proceso puede tardar unos momentos mientras analizamos tu nota...</p>
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast" id="errorToast">
+    <span class="toast-icon">⚠️</span>
+    <span class="toast-message">No se pudieron detectar palabras en la imagen</span>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const errorToast = document.getElementById('errorToast');
+        
+        // Mostrar overlay al enviar el formulario
+        form.addEventListener('submit', function(e) {
+            loadingOverlay.classList.add('active');
+        });
+    
+        // Función para mostrar el toast
+        function showToast() {
+            errorToast.classList.add('show');
+            setTimeout(() => {
+                errorToast.classList.remove('show');
+            }, 3000);
+        }
+    
+        // Si hay un error en el procesamiento (puedes detectarlo por una variable de contexto)
+       
+    });
+    </script>
+
+    {% if ocr_error %}
+    showToast();
+    {% endif %}
+
+<div class="note-form-container">
+    <div class="note-form-header">
+        <h1 class="note-form-title">Nueva Nota</h1>
+        <p class="note-form-subtitle">{{ patient.get_full_name }}</p>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" class="note-form">
+        {% csrf_token %}
+        
+        <div class="form-section">
+            <h2 class="form-section-title">Subir Imagen</h2>
+            <div class="image-upload-area" id="imageUploadArea">
+                <div class="upload-placeholder">
+                    <span class="upload-icon">📸</span>
+                    <p class="upload-text">Haz clic o arrastra una imagen aquí</p>
+                    <span class="upload-hint">Formatos soportados: JPG, PNG</span>
+                </div>
+                <input type="file" 
+                       name="image" 
+                       id="imageInput"
+                       class="file-input"
+                       accept="image/*"
+                       required>
+                <img id="imagePreview" class="image-preview" alt="Vista previa">
+            </div>
+            {% if form.image.errors %}
+            <div class="form-error">
+                {{ form.image.errors }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-actions">
+            <a href="{% url 'patient_notes' patient.pk %}" class="btn btn-outline">
+                Cancelar
+            </a>
+            <button type="submit" class="btn btn-primary">
+                Procesar Imagen
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    const form = document.querySelector('form');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    
+    // Mostrar overlay al enviar el formulario
+    form.addEventListener('submit', function(e) {
+        loadingOverlay.classList.add('active');
+    });
+
+
+    const imageUploadArea = document.getElementById('imageUploadArea');
+    const fileInput = document.getElementById('imageInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const uploadPlaceholder = document.querySelector('.upload-placeholder');
+
+    function handleImageSelect(file) {
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagePreview.src = e.target.result;
+                imagePreview.classList.add('show');
+                uploadPlaceholder.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Manejar selección de archivo
+    fileInput.addEventListener('change', function(e) {
+        handleImageSelect(this.files[0]);
+    });
+
+    // Manejar drag & drop
+    imageUploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.classList.add('dragover');
+    });
+
+    imageUploadArea.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        this.classList.remove('dragover');
+    });
+
+    imageUploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.classList.remove('dragover');
+        const file = e.dataTransfer.files[0];
+        fileInput.files = e.dataTransfer.files;
+        handleImageSelect(file);
+    });
+});
+</script>
+{% endblock %}
