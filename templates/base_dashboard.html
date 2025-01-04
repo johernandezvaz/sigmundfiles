@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SigmundFiles{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/buttons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/forms.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/mobile-nav.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/patients/detail.css' %}">
+    <link rel="stylesheet" href="{% static 'css/patients/list.css' %}">
+
+</head>
+<body>
+    <div class="layout has-sidebar">
+        <!-- Botón de menú móvil -->
+        <button class="mobile-nav-toggle" id="mobileMenuBtn" aria-label="Menú">
+            <span></span>
+        </button>
+        
+        <!-- Overlay para móvil -->
+        <div class="mobile-nav-overlay" id="mobileOverlay"></div>
+        
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="{% static 'img/logo.png' %}" alt="SigmundFiles Logo" class="sidebar-logo">
+                <h1>SigmundFiles</h1>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="{% url 'dashboard' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{% url 'patient_list' %}" class="nav-item {% if 'patient' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="nav-icon">👥</span>
+                    <span>Pacientes</span>
+                </a>
+                <a href="{% url 'profile' %}" class="nav-item {% if 'profile' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="nav-icon">👤</span>
+                    <span>Perfil</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        {{ user.first_name|make_list|first }}{{ user.last_name|make_list|first }}
+                    </div>
+                    <div class="user-details">
+                        <p class="user-name">{{ user.get_full_name }}</p>
+                        <p class="user-role">Psicólogo</p>
+                    </div>
+                </div>
+                <a href="{% url 'logout' %}" class="logout-btn">
+                    <span class="nav-icon">🚪</span>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Contenido principal -->
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileOverlay');
+
+            function toggleMenu() {
+                mobileMenuBtn.classList.toggle('active');
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('active');
+            }
+
+            mobileMenuBtn.addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', toggleMenu);
+        });
+    </script>
+</body>
+</html>

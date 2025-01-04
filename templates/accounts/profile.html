@@ -1,0 +1,52 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Perfil - SigmundFiles{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <h1 class="profile-title">Mi Perfil</h1>
+        <a href="{% url 'profile_edit' %}" class="btn btn-primary profile-edit-btn">
+            Editar Perfil
+        </a>
+    </div>
+    
+    <div class="profile-content">
+        <div class="profile-section">
+            <h2 class="profile-section-title">Información Personal</h2>
+            <div class="profile-grid">
+                <div class="profile-field">
+                    <div class="profile-field-label">Nombre Completo</div>
+                    <div class="profile-field-value">{{ user.get_full_name }}</div>
+                </div>
+                <div class="profile-field">
+                    <div class="profile-field-label">Email</div>
+                    <div class="profile-field-value">{{ user.email }}</div>
+                </div>
+                <div class="profile-field">
+                    <div class="profile-field-label">Cédula Profesional</div>
+                    <div class="profile-field-value">{{ user.professional_license }}</div>
+                </div>
+                <div class="profile-field">
+                    <div class="profile-field-label">Institución</div>
+                    <div class="profile-field-value">{{ user.institution|default:"No especificada" }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="profile-section">
+            <h2 class="profile-section-title">Estadísticas</h2>
+            <div class="profile-grid">
+                <div class="profile-field">
+                    <div class="profile-field-label">Total de Pacientes</div>
+                    <div class="profile-field-value">{{ user.patients.count }}</div>
+                </div>
+                <div class="profile-field">
+                    <div class="profile-field-label">Miembro desde</div>
+                    <div class="profile-field-value">{{ user.date_joined|date:"d/m/Y" }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

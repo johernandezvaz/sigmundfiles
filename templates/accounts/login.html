@@ -1,0 +1,51 @@
+{% extends "base_auth.html" %}
+{% load static %}
+
+{% block title %}Iniciar Sesión - SigmundFiles{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-form-side">
+        <div class="auth-logo">
+            <img src="{% static 'img/logo.png' %}" alt="SigmundFiles Logo" class="logo-img">
+            <h1>SigmundFiles</h1>
+        </div>
+        
+        <h2 class="auth-title">¡Bienvenido de nuevo!</h2>
+        <p class="auth-subtitle">Nos alegra verte otra vez</p>
+        
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            
+            <div class="form-group">
+                <label for="id_username" class="form-label">Correo electrónico</label>
+                <input type="email" id="id_username" name="username" class="form-input" required 
+                       placeholder="nombre@ejemplo.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="id_password" class="form-label">Contraseña</label>
+                <input type="password" id="id_password" name="password" class="form-input" required
+                       placeholder="••••••••">
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Iniciar Sesión
+            </button>
+            
+            <div class="auth-links">
+                <a href="{% url 'register' %}" class="auth-link">
+                    ¿No tienes una cuenta? Regístrate aquí
+                </a>
+            </div>
+        </form>
+    </div>
+    
+    <div class="auth-illustration-side">
+        <img src="{% static 'img/auth/auth.jpg' %}" 
+             alt="Ilustración de inicio de sesión" 
+             class="auth-illustration">
+    </div>
+</div>
+{% endblock %}

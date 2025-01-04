@@ -1,0 +1,21 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% load patient_extras %}
+
+{% block title %}{{ patient.get_full_name }} - SigmundFiles{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/patients/detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="patient-detail-container">
+    {% include "patients/includes/detail_header.html" %}
+    
+    <div class="patient-detail-content">
+        {% include "patients/includes/detail_personal_info.html" %}
+        {% include "patients/includes/detail_medical_history.html" %}
+        {% include "patients/includes/detail_family_info.html" %}
+    </div>
+</div>
+{% endblock %}

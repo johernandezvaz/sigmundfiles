@@ -1,0 +1,294 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+
+
+{% block content %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/patients/form.css' %}">
+<link rel="stylesheet" href="{% static 'css/patients/photo.css' %}">
+<link rel="stylesheet" href="{% static 'css/patients/family.css' %}">
+<link rel="stylesheet" href="{% static 'css/patients/medical.css' %}">
+{% endblock %}
+
+<div class="patient-form-container">
+    <div class="patient-form-header">
+        <h1 class="patient-form-title">
+            {% if form.instance.pk %}Editar Paciente{% else %}Nuevo Paciente{% endif %}
+        </h1>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" class="form-card" id="patientForm">
+        {% csrf_token %}
+        
+        <!-- Información Básica -->
+        <div class="form-section">
+
+
+            {% if existing_data %}
+            {{ existing_data|json_script:"existingData" }}
+            {% endif %}
+
+
+            
+            <h2 class="form-section-title">Información Básica</h2>
+            
+            <!-- Foto -->
+            <div class="photo-section">
+                <div class="photo-upload">
+                    <div class="photo-preview" id="photoPreview">
+                        {% if form.instance.photo %}
+                            <img src="{{ form.instance.photo.url }}" alt="Foto del paciente">
+                        {% else %}
+                            <div class="photo-placeholder">
+                                <span class="photo-placeholder-icon">📷</span>
+                                <span class="photo-placeholder-text">Subir foto</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {{ form.photo }}x
+                </div>
+                <label class="photo-label">Haz clic para seleccionar una foto</label>
+            </div>
+            
+            <!-- Campos básicos -->
+            <div class="form-grid">
+                <div class="form-group">{{ form.first_name.label_tag }}{{ form.first_name }}</div>
+                <div class="form-group">{{ form.last_name.label_tag }}{{ form.last_name }}</div>
+                <div class="form-group">{{ form.birth_date.label_tag }}{{ form.birth_date }}</div>
+                <div class="form-group">{{ form.gender.label_tag }}{{ form.gender }}</div>
+                <div class="form-group">{{ form.birthplace.label_tag }}{{ form.birthplace }}</div>
+                <div class="form-group">{{ form.education_level.label_tag }}{{ form.education_level }}</div>
+                <div class="form-group">{{ form.marital_status.label_tag }}{{ form.marital_status }}</div>
+            </div>
+        </div>
+
+        <!-- Información de Contacto -->
+        <div class="form-section">
+            <h2 class="form-section-title">Información de Contacto</h2>
+            <div class="form-grid">
+                <div class="form-group">{{ form.email.label_tag }}{{ form.email }}</div>
+                <div class="form-group">{{ form.phone.label_tag }}{{ form.phone }}</div>
+                <div class="form-group full-width">{{ form.address.label_tag }}{{ form.address }}</div>
+            </div>
+        </div>
+
+        <!-- Historial Médico -->
+        <div class="form-section">
+            <h2 class="form-section-title">Historial Médico</h2>
+            <div class="medical-questions">
+                {% for question in medical_questions %}
+                <div class="question-container">
+                    <p class="question-text">{{ question.text }}</p>
+                    <div class="options-group">
+                        <label class="option-item">
+                            <input type="radio" name="medical_{{ question.id }}" value="N" required>
+                            <span>Nunca</span>
+                        </label>
+                        <label class="option-item">
+                            <input type="radio" name="medical_{{ question.id }}" value="P">
+                            <span>Pasado</span>
+                        </label>
+                        <label class="option-item">
+                            <input type="radio" name="medical_{{ question.id }}" value="A">
+                            <span>Presente</span>
+                        </label>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Información Familiar -->
+        <div class="form-section">
+            <h2 class="form-section-title">Información Familiar</h2>
+            
+            <!-- Padres -->
+            <div class="family-section">
+                <h3 class="subsection-title">Padres</h3>
+                <div id="parentsContainer"></div>
+                <button type="button" class="add-family-btn" onclick="addParent()">
+                    <span class="btn-icon">+</span>
+                    Agregar Padre
+                </button>
+            </div>
+
+            <!-- Hermanos -->
+            <div class="family-section">
+                <h3 class="subsection-title">Hermanos <span class="optional-tag">(opcional)</span></h3>
+                <div id="siblingsContainer"></div>
+                <button type="button" class="add-family-btn" onclick="addSibling()">
+                    <span class="btn-icon">+</span>
+                    Agregar Hermano
+                </button>
+            </div>
+
+            <!-- Habitantes del Hogar -->
+            <div class="family-section">
+                <h3 class="subsection-title">Habitantes del Hogar <span class="optional-tag">(opcional)</span></h3>
+                <div id="householdContainer"></div>
+                <button type="button" class="add-family-btn" onclick="addHouseholdMember()">
+                    <span class="btn-icon">+</span>
+                    Agregar Habitante
+                </button>
+            </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="form-actions">
+            <a href="{% url 'patient_list' %}" class="btn btn-outline">Cancelar</a>
+            <button type="submit" class="btn btn-primary">
+                {% if form.instance.pk %}Guardar Cambios{% else %}Crear Paciente{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+// Funciones para manejar los formularios dinámicos
+function createInput(type, name, placeholder, required = false) {
+    const input = document.createElement('input');
+    input.type = type;
+    input.name = name + '[]';
+    input.className = 'form-input';
+    input.placeholder = placeholder;
+    if (required) input.required = true;
+    return input;
+}
+
+function createFormGroup(label, input) {
+    const div = document.createElement('div');
+    div.className = 'form-group';
+    
+    const labelElement = document.createElement('label');
+    labelElement.textContent = label;
+    
+    div.appendChild(labelElement);
+    div.appendChild(input);
+    return div;
+}
+
+function createRemoveButton() {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'btn-remove';
+    button.innerHTML = '×';
+    button.onclick = function() {
+        this.closest('.family-form').remove();
+    };
+    return button;
+}
+
+function addParent() {
+    const container = document.getElementById('parentsContainer');
+    const formDiv = document.createElement('div');
+    formDiv.className = 'family-form';
+    
+    const formGrid = document.createElement('div');
+    formGrid.className = 'form-grid';
+    
+    // Campos del formulario
+    formGrid.appendChild(createFormGroup('Nombre', createInput('text', 'parent_name', 'Nombre completo', true)));
+    formGrid.appendChild(createFormGroup('Fecha de nacimiento', createInput('date', 'parent_birth_date', '', true)));
+    formGrid.appendChild(createFormGroup('Escolaridad', createInput('text', 'parent_education_level', 'Nivel de estudios')));
+    formGrid.appendChild(createFormGroup('Ocupación', createInput('text', 'parent_occupation', 'Ocupación actual')));
+    
+    const historyTextarea = document.createElement('textarea');
+    historyTextarea.name = 'parent_pathological_history[]';
+    historyTextarea.className = 'form-input';
+    historyTextarea.placeholder = 'Antecedentes patológicos';
+    historyTextarea.rows = 3;
+    
+    const historyGroup = createFormGroup('Antecedentes patológicos', historyTextarea);
+    historyGroup.className = 'form-group full-width';
+    formGrid.appendChild(historyGroup);
+    
+    formDiv.appendChild(formGrid);
+    formDiv.appendChild(createRemoveButton());
+    container.appendChild(formDiv);
+}
+
+function addSibling() {
+    const container = document.getElementById('siblingsContainer');
+    const formDiv = document.createElement('div');
+    formDiv.className = 'family-form';
+    
+    const formGrid = document.createElement('div');
+    formGrid.className = 'form-grid';
+    
+    // Campos del formulario
+    formGrid.appendChild(createFormGroup('Nombre', createInput('text', 'sibling_name', 'Nombre completo', true)));
+    formGrid.appendChild(createFormGroup('Fecha de nacimiento', createInput('date', 'sibling_birth_date', '', true)));
+    formGrid.appendChild(createFormGroup('Escolaridad', createInput('text', 'sibling_education_level', 'Nivel de estudios')));
+    
+    const addictionsGroup = document.createElement('div');
+    addictionsGroup.className = 'form-group';
+    const addictionsLabel = document.createElement('label');
+    addictionsLabel.textContent = '¿Tiene adicciones?';
+    const addictionsCheckbox = createInput('checkbox', 'sibling_has_addictions', '');
+    addictionsGroup.appendChild(addictionsLabel);
+    addictionsGroup.appendChild(addictionsCheckbox);
+    formGrid.appendChild(addictionsGroup);
+    
+    const historyTextarea = document.createElement('textarea');
+    historyTextarea.name = 'sibling_pathological_history[]';
+    historyTextarea.className = 'form-input';
+    historyTextarea.placeholder = 'Antecedentes patológicos';
+    historyTextarea.rows = 3;
+    
+    const historyGroup = createFormGroup('Antecedentes patológicos', historyTextarea);
+    historyGroup.className = 'form-group full-width';
+    formGrid.appendChild(historyGroup);
+    
+    formDiv.appendChild(formGrid);
+    formDiv.appendChild(createRemoveButton());
+    container.appendChild(formDiv);
+}
+
+function addHouseholdMember() {
+    const container = document.getElementById('householdContainer');
+    const formDiv = document.createElement('div');
+    formDiv.className = 'family-form';
+    
+    const formGrid = document.createElement('div');
+    formGrid.className = 'form-grid';
+    
+    // Campos del formulario
+    formGrid.appendChild(createFormGroup('Nombre', createInput('text', 'household_name', 'Nombre completo', true)));
+    formGrid.appendChild(createFormGroup('Relación', createInput('text', 'household_relationship', 'Parentesco o relación', true)));
+    
+    const historyTextarea = document.createElement('textarea');
+    historyTextarea.name = 'household_medical_history[]';
+    historyTextarea.className = 'form-input';
+    historyTextarea.placeholder = 'Antecedentes médicos';
+    historyTextarea.rows = 3;
+    
+    const historyGroup = createFormGroup('Antecedentes médicos', historyTextarea);
+    historyGroup.className = 'form-group full-width';
+    formGrid.appendChild(historyGroup);
+    
+    formDiv.appendChild(formGrid);
+    formDiv.appendChild(createRemoveButton());
+    container.appendChild(formDiv);
+}
+
+// Previsualización de la foto
+const photoInput = document.querySelector('input[type="file"]');
+const photoPreview = document.getElementById('photoPreview');
+
+if (photoInput && photoPreview) {
+    photoInput.addEventListener('change', function(e) {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                photoPreview.innerHTML = `<img src="${e.target.result}" alt="Vista previa">`;
+            };
+            
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+}
+</script>
+{% endblock %}

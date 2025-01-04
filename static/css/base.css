@@ -1,0 +1,47 @@
+/* Reset y variables globales */
+:root {
+    --primary-blue: #328ec7;
+    --primary-mint: #82f2c2;
+    --text-dark: #2d3748;
+    --text-light: #718096;
+    --white: #ffffff;
+    --error: #e53e3e;
+    --gradient: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-mint) 100%);
+    --sidebar-width: 280px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--text-dark);
+    line-height: 1.5;
+    background-color: #f7fafc;
+    min-height: 100vh;
+}
+
+/* Layout base */
+.layout {
+    min-height: 100vh;
+    display: flex;
+}
+
+.main-content {
+    flex: 1;
+    min-width: 0; /* Importante para evitar desbordamiento */
+    margin-left: var(--sidebar-width);
+    background: #f7fafc;
+    min-height: 100vh;
+    width: calc(100% - var(--sidebar-width));
+}
+
+@media (max-width: 1024px) {
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+}

@@ -1,0 +1,50 @@
+/* Estilos base de botones */
+/* Estilos base de botones */
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.25rem;
+    font-weight: 600;
+    text-align: center;
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: none;
+    font-size: 0.875rem;
+    width: auto;
+}
+
+.btn-primary {
+    background: var(--gradient);
+    color: var(--white);
+    box-shadow: 0 4px 6px rgba(50, 142, 199, 0.12);
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 8px rgba(50, 142, 199, 0.2);
+}
+
+.btn-outline {
+    border: 2px solid var(--primary-blue);
+    color: var(--primary-blue);
+    background: transparent;
+}
+
+.btn-outline:hover {
+    background: var(--primary-blue);
+    color: var(--white);
+}
+  
+  /* Media Queries */
+  @media (min-width: 640px) {
+    .btn {
+      padding: 0.875rem 1.5rem;
+      font-size: 1rem;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+  }

@@ -1,0 +1,27 @@
+<!-- Historial médico -->
+
+{% load patient_extras %}
+
+<div class="detail-section">
+    <h2 class="section-title">Historial Médico</h2>
+    
+    {% if patient.medical_history %}
+    <div class="medical-history-grid">
+        {% for question in medical_questions %}
+        <div class="medical-item">
+            <span class="medical-label">{{ question.text }}</span>
+            <span class="medical-value">
+                {{ patient.medical_history|get_choice_display:question.id }}
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>No hay información médica registrada</p>
+        <a href="{% url 'medical_history' patient.id %}" class="btn btn-outline">
+            Agregar historial médico
+        </a>
+    </div>
+    {% endif %}
+</div>

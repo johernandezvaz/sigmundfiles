@@ -1,0 +1,95 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+{% block title %}Pacientes - SigmundFiles{% endblock %}
+
+{% block content %}
+
+<div class="patients-container">
+    <div class="patients-header">
+        <h1 class="patients-title">Mis Pacientes</h1>
+        <div class="patients-actions">
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" 
+                       class="search-input" 
+                       placeholder="Buscar pacientes..."
+                       id="searchPatients">
+            </div>
+            <a href="{% url 'patient_create' %}" class="btn btn-primary">
+                Agregar Paciente
+            </a>
+        </div>
+    </div>
+
+    {% if patients %}
+    <div class="patients-grid" id="patientsGrid">
+        {% for patient in patients %}
+        <div class="patient-card" data-patient-name="{{ patient.first_name|lower }} {{ patient.last_name|lower }}">
+            <div class="patient-header">
+                {% if patient.photo %}
+                <img src="{{ patient.photo.url }}" alt="{{ patient.get_full_name }}" class="patient-avatar">
+                {% else %}
+                <div class="patient-avatar-placeholder">
+                    {{ patient.first_name|make_list|first }}{{ patient.last_name|make_list|first }}
+                </div>
+                {% endif %}
+                <div class="patient-info">
+                    <h3>{{ patient.first_name }} {{ patient.last_name }}</h3>
+                    <p class="patient-meta">{{ patient.age }} años</p>
+                </div>
+            </div>
+            <div class="patient-body">
+                <div class="patient-detail">
+                    <span class="detail-label">Teléfono:</span>
+                    <span>{{ patient.phone }}</span>
+                </div>
+                <div class="patient-detail">
+                    <span class="detail-label">Email:</span>
+                    <span>{{ patient.email|default:"No especificado" }}</span>
+                </div>
+            </div>
+            <div class="patient-footer">
+                <a href="{% url 'patient_detail' patient.id %}" class="btn btn-outline">
+                    Ver Expediente
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">👥</div>
+        <h2 class="empty-title">No hay pacientes registrados</h2>
+        <p class="empty-description">Comienza agregando tu primer paciente</p>
+        <a href="{% url 'patient_create' %}" class="btn btn-primary">
+            Agregar Paciente
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchPatients');
+    const patientsGrid = document.getElementById('patientsGrid');
+    
+    if (searchInput && patientsGrid) {
+        const patientCards = patientsGrid.querySelectorAll('.patient-card');
+        
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            patientCards.forEach(card => {
+                const patientName = card.dataset.patientName;
+                if (patientName.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    }
+});
+</script>
+{% endblock %}

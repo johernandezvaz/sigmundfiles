@@ -1,0 +1,87 @@
+{% comment %}Template para formulario de padre{% endcomment %}
+<template id="parentFormTemplate">
+    <div class="formset-item">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="parent_name_${index}">Nombre</label>
+                <input type="text" name="parents[${index}][name]" id="parent_name_${index}" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="parent_birth_date_${index}">Fecha de nacimiento</label>
+                <input type="date" name="parents[${index}][birth_date]" id="parent_birth_date_${index}" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="parent_education_${index}">Escolaridad</label>
+                <input type="text" name="parents[${index}][education_level]" id="parent_education_${index}" class="form-input">
+            </div>
+            <div class="form-group">
+                <label for="parent_occupation_${index}">Ocupación</label>
+                <input type="text" name="parents[${index}][occupation]" id="parent_occupation_${index}" class="form-input">
+            </div>
+            <div class="form-group full-width">
+                <label for="parent_pathological_${index}">Antecedentes patológicos</label>
+                <textarea name="parents[${index}][pathological_history]" id="parent_pathological_${index}" class="form-input" rows="3"></textarea>
+            </div>
+        </div>
+        <button type="button" class="btn btn-icon btn-remove" onclick="removeFormsetItem(this)">
+            <span>×</span>
+        </button>
+    </div>
+</template>
+
+{% comment %}Template para formulario de hermano{% endcomment %}
+<template id="siblingFormTemplate">
+    <div class="formset-item">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="sibling_name_${index}">Nombre</label>
+                <input type="text" name="siblings[${index}][name]" id="sibling_name_${index}" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="sibling_birth_date_${index}">Fecha de nacimiento</label>
+                <input type="date" name="siblings[${index}][birth_date]" id="sibling_birth_date_${index}" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="sibling_education_${index}">Escolaridad</label>
+                <input type="text" name="siblings[${index}][education_level]" id="sibling_education_${index}" class="form-input">
+            </div>
+            <div class="form-group">
+                <label for="sibling_addictions_${index}">¿Tiene adicciones?</label>
+                <div class="toggle-switch">
+                    <input type="checkbox" name="siblings[${index}][has_addictions]" id="sibling_addictions_${index}">
+                    <label for="sibling_addictions_${index}"></label>
+                </div>
+            </div>
+            <div class="form-group full-width">
+                <label for="sibling_pathological_${index}">Antecedentes patológicos</label>
+                <textarea name="siblings[${index}][pathological_history]" id="sibling_pathological_${index}" class="form-input" rows="3"></textarea>
+            </div>
+        </div>
+        <button type="button" class="btn btn-icon btn-remove" onclick="removeFormsetItem(this)">
+            <span>×</span>
+        </button>
+    </div>
+</template>
+
+{% comment %}Template para formulario de habitante del hogar{% endcomment %}
+<template id="householdMemberFormTemplate">
+    <div class="formset-item">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="household_name_${index}">Nombre</label>
+                <input type="text" name="household[${index}][name]" id="household_name_${index}" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="household_relationship_${index}">Relación</label>
+                <input type="text" name="household[${index}][relationship]" id="household_relationship_${index}" class="form-input" required>
+            </div>
+            <div class="form-group full-width">
+                <label for="household_medical_${index}">Antecedentes médicos</label>
+                <textarea name="household[${index}][medical_history]" id="household_medical_${index}" class="form-input" rows="3"></textarea>
+            </div>
+        </div>
+        <button type="button" class="btn btn-icon btn-remove" onclick="removeFormsetItem(this)">
+            <span>×</span>
+        </button>
+    </div>
+</template>

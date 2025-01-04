@@ -1,0 +1,24 @@
+<!-- Encabezado con foto y acciones -->
+<div class="detail-header">
+    <div class="patient-profile">
+        <div class="patient-avatar">
+            {% if patient.photo %}
+            <img src="{{ patient.photo.url }}" alt="{{ patient.get_full_name }}">
+            {% else %}
+            <div class="avatar-placeholder">
+                {{ patient.first_name|make_list|first }}{{ patient.last_name|make_list|first }}
+            </div>
+            {% endif %}
+        </div>
+        <div class="patient-basic-info">
+            <h1>{{ patient.get_full_name }}</h1>
+            <p class="patient-meta">{{ patient.age }} años • {{ patient.get_gender_display }}</p>
+        </div>
+    </div>
+    
+    <div class="header-actions">
+        <a href="{% url 'patient_edit' patient.id %}" class="btn btn-primary">
+            Editar Paciente
+        </a>
+    </div>
+</div>

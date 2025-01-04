@@ -1,0 +1,94 @@
+/* Estilos para la página de perfil */
+.profile-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.profile-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.profile-edit-btn {
+    padding: 0.75rem 1.5rem;
+}
+
+.profile-content {
+    background: var(--white);
+    border-radius: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.profile-section {
+    padding: 2rem;
+}
+
+.profile-section + .profile-section {
+    border-top: 1px solid #e2e8f0;
+}
+
+.profile-section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 1.5rem;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.profile-field {
+    margin-bottom: 1rem;
+}
+
+.profile-field-label {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    margin-bottom: 0.25rem;
+}
+
+.profile-field-value {
+    font-size: 1rem;
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+/* Estilos responsivos */
+@media (max-width: 1024px) {
+    .profile-container {
+        padding-top: 5rem; /* Espacio para el botón de menú */
+    }
+}
+
+@media (max-width: 640px) {
+    .profile-container {
+        padding: 5rem 1rem 1rem; /* Mantener espacio superior para el botón */
+    }
+    
+    .profile-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .profile-section {
+        padding: 1.5rem;
+    }
+    
+    .profile-edit-btn {
+        width: 100%; /* Botón a ancho completo en móvil */
+    }
+}

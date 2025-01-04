@@ -1,0 +1,43 @@
+<!-- Información personal del paciente -->
+<div class="detail-section">
+    <h2 class="section-title">Información Personal</h2>
+    
+    <div class="info-grid">
+        <div class="info-item">
+            <span class="info-label">Fecha de nacimiento</span>
+            <span class="info-value">{{ patient.birth_date|date:"d/m/Y" }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Lugar de nacimiento</span>
+            <span class="info-value">{{ patient.birthplace }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Escolaridad</span>
+            <span class="info-value">{{ patient.education_level }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Estado civil</span>
+            <span class="info-value">{{ patient.get_marital_status_display }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Teléfono</span>
+            <span class="info-value">{{ patient.phone }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Email</span>
+            <span class="info-value">{{ patient.email|default:"No especificado" }}</span>
+        </div>
+        <div class="info-item full-width">
+            <span class="info-label">Dirección</span>
+            <span class="info-value">{{ patient.address }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Religión</span>
+            <span class="info-value">{{ patient.religion|default:"No especificada" }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Asistencia</span>
+            <span class="info-value">{{ patient.voluntary_assistance|yesno:"Voluntaria,No voluntaria" }}</span>
+        </div>
+    </div>
+</div>

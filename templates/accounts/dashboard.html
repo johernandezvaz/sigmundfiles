@@ -1,0 +1,108 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+{% block title %}Dashboard - SigmundFiles{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+
+<div class="dashboard">
+    <div class="dashboard-header">
+        <div class="welcome-section">
+            <h1>Bienvenido, {{ user.get_full_name }}</h1>
+            <p class="text-muted">{{ now|date:"l, d F Y" }}</p>
+        </div>
+        
+        <div class="quick-stats">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-info">
+                    <h3>{{ patients.count }}</h3>
+                    <p>Pacientes Totales</p>
+                </div>
+            </div>
+            <!-- Más estadísticas pueden agregarse aquí -->
+        </div>
+    </div>
+
+    <div class="dashboard-content">
+        <div class="section-header">
+            <h2>Mis Pacientes</h2>
+            <div class="search-bar">
+                <input type="text" id="patientSearch" placeholder="Buscar pacientes..." 
+                       class="search-input">
+            </div>
+        </div>
+
+        {% if patients %}
+        <div class="patients-grid" id="patientsContainer">
+            {% for patient in patients %}
+            <div class="patient-card" data-patient-name="{{ patient.first_name|lower }} {{ patient.last_name|lower }}">
+                <div class="patient-card-header">
+                    {% if patient.photo %}
+                    <img src="{{ patient.photo.url }}" alt="{{ patient.get_full_name }}" 
+                         class="patient-avatar">
+                    {% else %}
+                    <div class="patient-avatar-placeholder">
+                        {{ patient.first_name|make_list|first }}{{ patient.last_name|make_list|first }}
+                    </div>
+                    {% endif %}
+                    <div class="patient-basic-info">
+                        <h3>{{ patient.first_name }} {{ patient.last_name }}</h3>
+                        <p class="patient-id">ID: {{ patient.id }}</p>
+                    </div>
+                </div>
+                
+                <div class="patient-card-content">
+                    <div class="patient-detail">
+                        <span class="detail-label">Edad:</span>
+                        <span>{{ patient.age }} años</span>
+                    </div>
+                    <div class="patient-detail">
+                        <span class="detail-label">Teléfono:</span>
+                        <span>{{ patient.phone }}</span>
+                    </div>
+                </div>
+                
+                <div class="patient-card-footer">
+                    <a href="{% url 'patient_detail' patient.id %}" 
+                       class="btn btn-outline">Ver detalles</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <img src="{% static 'img/empty-patients.svg' %}" alt="No hay pacientes" 
+                 class="empty-illustration">
+            <h3>No hay pacientes registrados</h3>
+            <p>Comienza agregando tu primer paciente</p>
+            <a href="{% url 'patient_create' %}" class="btn btn-primary">
+                Agregar Paciente
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('patientSearch');
+    const patientsContainer = document.getElementById('patientsContainer');
+    const patientCards = document.querySelectorAll('.patient-card');
+
+    searchInput.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        
+        patientCards.forEach(card => {
+            const patientName = card.dataset.patientName;
+            if (patientName.includes(searchTerm)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

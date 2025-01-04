@@ -1,0 +1,53 @@
+{% extends "base_auth.html" %}
+{% load static %}
+
+{% block title %}Registro - SigmundFiles{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-form-side">
+        <div class="auth-logo">
+            <img src="{% static 'img/logo.png' %}" alt="SigmundFiles Logo" class="logo-img">
+            <h1>SigmundFiles</h1>
+        </div>
+        
+        <h2 class="auth-title">Crear cuenta</h2>
+        <p class="auth-subtitle">Únete a nuestra comunidad profesional</p>
+        
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}" class="form-label">
+                    {{ field.label }}
+                </label>
+                {{ field }}
+                {% if field.errors %}
+                <div class="error-message">
+                    {{ field.errors }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary">
+                Crear cuenta
+            </button>
+            
+            <div class="auth-links">
+                <a href="{% url 'login' %}" class="auth-link">
+                    ¿Ya tienes una cuenta? Inicia sesión aquí
+                </a>
+            </div>
+        </form>
+    </div>
+    
+    <div class="auth-illustration-side">
+        <img src="{% static 'img/auth/auth.jpg' %}" 
+             alt="Ilustración de registro" 
+             class="auth-illustration">
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,95 @@
+<!-- Información familiar -->
+<div class="detail-section">
+    <h2 class="section-title">Información Familiar</h2>
+    
+    <!-- Padres -->
+    {% if patient.parents.exists %}
+    <div class="family-subsection">
+        <h3 class="subsection-title">Padres</h3>
+        <div class="family-grid">
+            {% for parent in patient.parents.all %}
+            <div class="family-card">
+                <div class="family-card-header">
+                    <h4>{{ parent.name }}</h4>
+                    <span class="family-meta">{{ parent.birth_date|date:"d/m/Y" }}</span>
+                </div>
+                <div class="family-card-content">
+                    <div class="family-detail">
+                        <span class="detail-label">Escolaridad:</span>
+                        <span>{{ parent.education_level }}</span>
+                    </div>
+                    <div class="family-detail">
+                        <span class="detail-label">Ocupación:</span>
+                        <span>{{ parent.occupation }}</span>
+                    </div>
+                    {% if parent.pathological_history %}
+                    <div class="family-detail full-width">
+                        <span class="detail-label">Antecedentes patológicos:</span>
+                        <span>{{ parent.pathological_history }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Hermanos -->
+    {% if patient.siblings.exists %}
+    <div class="family-subsection">
+        <h3 class="subsection-title">Hermanos</h3>
+        <div class="family-grid">
+            {% for sibling in patient.siblings.all %}
+            <div class="family-card">
+                <div class="family-card-header">
+                    <h4>{{ sibling.name }}</h4>
+                    <span class="family-meta">{{ sibling.birth_date|date:"d/m/Y" }}</span>
+                </div>
+                <div class="family-card-content">
+                    <div class="family-detail">
+                        <span class="detail-label">Escolaridad:</span>
+                        <span>{{ sibling.education_level }}</span>
+                    </div>
+                    <div class="family-detail">
+                        <span class="detail-label">Adicciones:</span>
+                        <span>{{ sibling.has_addictions|yesno:"Sí,No" }}</span>
+                    </div>
+                    {% if sibling.pathological_history %}
+                    <div class="family-detail full-width">
+                        <span class="detail-label">Antecedentes patológicos:</span>
+                        <span>{{ sibling.pathological_history }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Habitantes del hogar -->
+    {% if patient.household_members.exists %}
+    <div class="family-subsection">
+        <h3 class="subsection-title">Habitantes del Hogar</h3>
+        <div class="family-grid">
+            {% for member in patient.household_members.all %}
+            <div class="family-card">
+                <div class="family-card-header">
+                    <h4>{{ member.name }}</h4>
+                    <span class="family-meta">{{ member.relationship }}</span>
+                </div>
+                {% if member.medical_history %}
+                <div class="family-card-content">
+                    <div class="family-detail full-width">
+                        <span class="detail-label">Antecedentes médicos:</span>
+                        <span>{{ member.medical_history }}</span>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>

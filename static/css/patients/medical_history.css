@@ -1,0 +1,123 @@
+/* Contenedor del historial médico */
+.medical-history {
+    background: #fff;
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Título de la sección */
+.medical-history-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f3f4f6;
+}
+
+/* Contenedor de preguntas */
+.medical-questions {
+    display: grid;
+    gap: 1.5rem;
+}
+
+/* Estilo para cada pregunta */
+.medical-question {
+    background: #f8fafc;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    border: 1px solid #e5e7eb;
+    transition: all 0.2s ease;
+}
+
+.medical-question:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+/* Texto de la pregunta */
+.question-text {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+}
+
+/* Grupo de opciones */
+.options-group {
+    display: flex;
+    gap: 2.5rem;
+    padding: 0.5rem 0;
+}
+
+/* Estilo para cada opción */
+.option-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.option-item:hover {
+    background: #f1f5f9;
+}
+
+/* Radio buttons personalizados */
+.option-item input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid #cbd5e1;
+    border-radius: 50%;
+    margin: 0;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.option-item input[type="radio"]:checked {
+    border-color: var(--primary-blue);
+    background: var(--primary-blue);
+}
+
+.option-item input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0.5rem;
+    height: 0.5rem;
+    background: white;
+    border-radius: 50%;
+}
+
+/* Texto de la opción */
+.option-item span {
+    font-size: 0.875rem;
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .medical-history {
+        padding: 1.5rem;
+    }
+
+    .options-group {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .option-item {
+        padding: 0.75rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+    }
+}
